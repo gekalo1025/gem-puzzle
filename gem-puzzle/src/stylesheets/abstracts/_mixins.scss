@@ -1,0 +1,32 @@
+// -----------------------------------------------------------------------------
+// // Этот файл содержит mixins Sass для всего приложения.
+// -----------------------------------------------------------------------------
+@import "../abstracts/variables";
+
+@mixin adaptiv-value($property, $startSize, $minSize, $startWidth: #{$max-width-layout}, $minWidth: 320) {
+  $addSize: $startSize - $minSize;
+  #{$property}: $startSize + px;
+  @media (min-width : #{$minWidth + px}) and (max-width: #{$startWidth + px}) {
+    #{$property}: calc(#{$minSize + px} + #{$addSize} * ((100vw - #{$minWidth + px}) / #{$startWidth - $minWidth}));
+  }
+}
+
+// @mixin adaptiv-value($property, $startSize, $minSize, $type) {
+//   $addSize: $startSize - $minSize;
+//   @if $type ==1 {
+//     // Только если меньше контейнера
+//     #{$property}: $startSize + px;
+//     @media (max-width: #{$max-width-layout + px}) {
+//       #{$property}: calc(#{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$max-width-layout - 320}));
+//     }
+//   } @else if $type==2 {
+//     // Только если больше контейнера
+//     #{$property}: $startSize + px;
+//     @media (min-width: #{$max-width-layout + px}) {
+//       #{$property}: calc(#{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$max-width-container - 320}));
+//     }
+//   } @else {
+//     //всегда
+//     #{$property}: calc(#{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$max-width-container - 320}));
+//   }
+// }
