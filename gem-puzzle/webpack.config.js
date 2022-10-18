@@ -15,7 +15,7 @@ const config = {
   context: path.resolve(__dirname, "src"),
 
   entry: pages.reduce((config, page) => {
-    config[page] = ["@babel/polyfill", `./pages/${page}/${page}.js`];
+    config[page] = [`./pages/${page}/${page}.js`]; // "@babel/polyfill"
     return config;
   }, {}),
   output: {
@@ -30,9 +30,9 @@ const config = {
     },
   },
   devServer: {
-    port: 8888,
+    port: 8080,
     open: true,
-    host: "127.0.0.1",
+    host: "localhost",
     compress: true,
     hot: isDev,
   },
@@ -42,7 +42,7 @@ const config = {
         new HtmlWebpackPlugin({
           inject: true,
           template: `./pages/${page}/${page}.html`,
-          filename: `${page}.[contenthash].html`,
+          filename: `${page}.html`,
           chunks: [page],
           minify: {
             collapseWhitespace: isProd,
@@ -144,7 +144,7 @@ module.exports = () => {
     config.mode = "production";
   } else {
     config.mode = "development";
-    config.plugins.push(new BundleAnalyzerPlugin());
+    // config.plugins.push(new BundleAnalyzerPlugin());
   }
   return config;
 };

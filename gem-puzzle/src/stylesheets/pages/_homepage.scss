@@ -1,0 +1,26 @@
+.canvas {
+    position: relative;
+    border: 5px solid red;
+    background-color: #f1f1f1;
+    max-width: 800px;
+    height: 70vh;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+.component {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% / 4);
+    height: calc((100% / 4));
+    min-height: 100px;
+    border: 2px solid rgb(107, 123, 107);
+    color: black;
+    font-size: large;
+    z-index: 2;
+    cursor: grab;
+}
+.emptiness {
+    background-color: rgb(77, 76, 76);
+}
