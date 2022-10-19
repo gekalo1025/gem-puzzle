@@ -120,6 +120,13 @@ const config = {
         },
       },
       {
+        test: /\.(mp3|mp4)$/i,
+        type: "asset/resource",
+        generator: {
+          filename: "audio/[hash][ext]",
+        },
+      },
+      {
         test: /\.(ttf|woff|woff2|eot)$/i,
         type: "asset/resource",
         generator: {

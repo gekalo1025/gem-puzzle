@@ -1,26 +1,134 @@
 .canvas {
     position: relative;
     border: 5px solid red;
-    background-color: #f1f1f1;
     max-width: 800px;
     height: 70vh;
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
+    margin-bottom: 20px;
 }
 .component {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: #f1f1f1;
     width: calc(100% / 4);
     height: calc((100% / 4));
-    min-height: 100px;
+    min-height: 50px;
     border: 2px solid rgb(107, 123, 107);
     color: black;
     font-size: large;
-    z-index: 2;
+    z-index: 3;
     cursor: grab;
+    position: relative;
+}
+.size3 {
+    width: calc(100% / 3);
+    height: calc((100% / 3));
+}
+.size5 {
+    width: calc(100% / 5);
+    height: calc((100% / 5));
+}
+.size6 {
+    width: calc(100% / 6);
+    height: calc((100% / 6));
+}
+.size7 {
+    width: calc(100% / 7);
+    height: calc((100% / 7));
+}
+
+.size8 {
+    width: calc(100% / 8);
+    height: calc((100% / 8));
 }
 .emptiness {
+    position: relative;
+    z-index: -1;
     background-color: rgb(77, 76, 76);
+    transition: background-color 1s;
+}
+
+.button-row-size {
+    .container {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+    }
+}
+
+#god-mode {
+    background-color: #f1f1f1;
+    &.active {
+        background-color: rgb(128, 208, 81);
+    }
+}
+
+[data-tooltip] {
+    position: relative; /* Относительное позиционирование */
+}
+[data-tooltip]::after {
+    content: attr(data-tooltip); /* Выводим текст */
+    position: absolute; /* Абсолютное позиционирование */
+    max-width: 300px; /* Ширина подсказки */
+    left: -100%;
+    top: 0; /* Положение подсказки */
+    background: #3989c9; /* Синий цвет фона */
+    color: #fff; /* Цвет текста */
+    padding: 0.5em; /* Поля вокруг текста */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Параметры тени */
+    pointer-events: none; /* Подсказка */
+    opacity: 0; /* Подсказка невидима */
+    transition: 1s; /* Время появления подсказки */
+}
+[data-tooltip]:hover::after {
+    opacity: 1; /* Показываем подсказку */
+    top: 110%; /* Положение подсказки */
+}
+@keyframes MovingRight {
+    0% {
+        right: 25%;
+    }
+    100% {
+        right: 0%;
+    }
+}
+@keyframes MovingLeft {
+    0% {
+        right: -25%;
+    }
+    100% {
+        right: 0%;
+    }
+}
+@keyframes MovingTop {
+    0% {
+        top: 25%;
+    }
+    100% {
+        top: 0%;
+    }
+}
+@keyframes MovingBottom {
+    0% {
+        top: -25%;
+    }
+    100% {
+        top: 0%;
+    }
+}
+
+.moving-animation-right {
+    animation: MovingRight 0.4s;
+}
+.moving-animation-left {
+    animation: MovingLeft 0.4s;
+}
+.moving-animation-top {
+    animation: MovingTop 0.4s;
+}
+.moving-animation-bottom {
+    animation: MovingBottom 0.4s;
 }
