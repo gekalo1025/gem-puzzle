@@ -102,19 +102,34 @@ function getRandomIntInclusive(min, max) {
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
 }
-
-function addComponent(countElement) {
+function getRandomArrNumber(countElement) {
   let arrNumber = [];
-  const canvas = document.querySelector(".canvas");
-  let newElementEmptiness = document.createElement("div");
+  let randomArrNumber = [];
   for (let i = 1; i <= countElement; i++) {
     arrNumber.push(i);
   }
-  for (let i = 1; i <= countElement; i++) {
-    let randomNumber = `${arrNumber.splice(
-      getRandomIntInclusive(0, arrNumber.length - 1),
-      1
-    )}`;
+
+  while (randomArrNumber.length - 1 <= countElement) {
+    randomArrNumber.push(
+      arrNumber.splice(`${getRandomIntInclusive(0, arrNumber.length - 1)}`, 1)
+    );
+  }
+
+  if (isPossibleSolve(randomArrNumber)) {
+    return randomArrNumber;
+  } else {
+    return getRandomArrNumber(countElement);
+  }
+}
+
+function addComponent(countElement) {
+  const canvas = document.querySelector(".canvas");
+  let newElementEmptiness = document.createElement("div");
+
+  let randomArrNumber = getRandomArrNumber(`${areaSize * areaSize - 1}`);
+
+  for (let i = 0; i < countElement; i++) {
+    let randomNumber = randomArrNumber.splice(0, 1);
     let newElement = document.createElement("div");
     newElement.classList.add("component", `size${areaSize}`);
     newElement.setAttribute("draggable", "true");
@@ -122,6 +137,7 @@ function addComponent(countElement) {
     newElement.textContent = randomNumber;
     canvas.append(newElement);
   }
+
   newElementEmptiness.classList.add(
     "component",
     "emptiness",
@@ -344,3 +360,33 @@ function isWin() {
   setTimeout(isWin, 1000);
 }
 isWin();
+
+function countInversion(array) {
+  let countInversion = 0;
+  for (let i = 0; i < array.length; i++) {
+    for (let j = i; j < array.length; j++) {
+      if (array[i] <= array[j]) {
+      } else {
+        countInversion++;
+      }
+    }
+  }
+
+  return countInversion;
+}
+
+function isPossibleSolve(arr) {
+  if (areaSize % 2 === 0) {
+    if ((countInversion(arr) + (areaSize - 1)) % 2 === 0) {
+      return false;
+    } else {
+      return true;
+    }
+  } else {
+    if (countInversion(arr) % 2 === 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
