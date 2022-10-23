@@ -1,24 +1,28 @@
 .canvas {
     position: relative;
-    border: 5px solid red;
-    max-width: 800px;
-    height: 70vh;
+    border: 5px solid rgb(0, 0, 0);
+    // @include adaptiv-value("max-width", 1000, 300);
+    max-width: 50%;
+    height: 65vh;
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 20px;
+    background-color: black;
+    margin: 0 auto;
 }
 .component {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f1f1f1;
-    width: calc(100% / 4);
+    background-color: #1dc49d;
+
+    width: calc((100% / 4));
     height: calc((100% / 4));
     min-height: 50px;
-    border: 2px solid rgb(107, 123, 107);
+    border: 2px solid rgb(238, 250, 10);
     color: black;
-    font-size: large;
+    font-size: 100%;
     z-index: 3;
     cursor: grab;
     position: relative;
@@ -47,7 +51,7 @@
 .emptiness {
     position: relative;
     z-index: -1;
-    background-color: rgb(77, 76, 76);
+    background-color: rgb(0, 0, 0);
     transition: background-color 1s;
 }
 
@@ -65,6 +69,20 @@
         background-color: rgb(128, 208, 81);
     }
 }
+#stop {
+    display: none;
+}
+// .nav-result {
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     width: 100px;
+//     height: 100px;
+//     background-color: #1dc49d;
+
+//     & .visible {
+//     }
+// }
 
 [data-tooltip] {
     position: relative; /* Относительное позиционирование */
@@ -72,8 +90,9 @@
 [data-tooltip]::after {
     content: attr(data-tooltip); /* Выводим текст */
     position: absolute; /* Абсолютное позиционирование */
-    max-width: 300px; /* Ширина подсказки */
+    width: 445%; /* Ширина подсказки */
     left: -100%;
+    // white-space: nowrap;
     top: 0; /* Положение подсказки */
     background: #3989c9; /* Синий цвет фона */
     color: #fff; /* Цвет текста */
@@ -84,6 +103,7 @@
     transition: 1s; /* Время появления подсказки */
 }
 [data-tooltip]:hover::after {
+    z-index: 5;
     opacity: 1; /* Показываем подсказку */
     top: 110%; /* Положение подсказки */
 }

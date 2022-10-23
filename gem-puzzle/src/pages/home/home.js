@@ -48,7 +48,7 @@ const myHTML = {
     this.buttonRow.classList.add("button-row");
     this.buttonRowSize.classList.add("button-row-size");
     this.analyticRow.classList.add("analytic-row");
-    this.navResult.classList.add("navResult");
+    this.navResult.classList.add("nav-result");
     this.moves.classList.add("moves");
     this.time.classList.add("time");
     this.sound.classList.add("sound");
@@ -64,10 +64,7 @@ const myHTML = {
     this.buttonResults.textContent = "Results";
     this.buttonGodMode.textContent = "GodMode";
     this.buttonGodMode.id = "god-mode";
-    this.buttonGodMode.setAttribute(
-      "data-tooltip",
-      "Позволяет двигать плитки более свободно"
-    );
+    this.buttonGodMode.setAttribute("data-tooltip", "Двигай как хочешь");
     this.moves.textContent = "Moves: ";
     this.time.textContent = "Time: ";
     this.header.append(this.container);
@@ -100,6 +97,7 @@ const myHTML = {
     this.analyticRow.append(this.time);
     document.body.insertBefore(this.header, document.body.childNodes[0]);
     document.body.insertBefore(this.buttonRowSize, document.body.childNodes[2]);
+    // document.body.insertBefore(this.navResult, document.body.childNodes[3]);
   },
 };
 myHTML.add();
@@ -256,7 +254,6 @@ document.querySelector(".canvas").addEventListener("click", (el) => {
 });
 
 function newGame() {
-  console.log(resultGame);
   const canvas = document.body.childNodes[1];
   if (canvas.classList.contains("canvas")) {
     myGameArea.movesCounter = 0;
@@ -365,9 +362,10 @@ function isWin() {
       winMoves++;
     }
   }
-  if (allComponent[allComponent.length - 1].getAttribute("name") === "0") {
+  if (allComponent[allComponent.length - 1].getAttribute("name") == 0) {
     winMoves++;
   }
+  console.log(winMoves);
   if (winMoves === allComponent.length) {
     addTopResult();
     alert(
@@ -435,7 +433,24 @@ function loadGame() {
 
 document.querySelector("#save").addEventListener("click", saveGame);
 document.querySelector("#load").addEventListener("click", loadGame);
-
+document.querySelector("#results").addEventListener("mouseenter", () => {
+  let sortResult = resultGame[`${areaSize}`].sort((a, b) => {
+    a = parseInt(a.match(/\d+/));
+    b = parseInt(b.match(/\d+/));
+    return a - b;
+  });
+  if (sortResult.length === 0) {
+    results.setAttribute("data-tooltip", `No results yet`);
+  } else {
+    let topTenResult = sortResult.slice(0, 11);
+    const results = document.querySelector("#results");
+    let tooltip = "";
+    for (let i = 0; i < topTenResult.length; i++) {
+      tooltip += `   ${i + 1}. ` + topTenResult[i];
+    }
+    results.setAttribute("data-tooltip", `${tooltip}`);
+  }
+});
 function setLocalStorage(name, value) {
   localStorage.setItem(`${name}`, value);
 }
@@ -450,9 +465,7 @@ let resultGame = {
 };
 function addTopResult() {
   resultGame[`${areaSize}`].push(
-    `You solved the puzzle in ${
-      document.querySelector(".time > span").textContent
-    } and ${myGameArea.movesCounter} moves`
+    `You solved the puzzle in ${myGameArea.movesCounter} moves`
   );
 }
 
