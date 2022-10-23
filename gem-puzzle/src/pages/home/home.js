@@ -1,21 +1,31 @@
 import "../../stylesheets/main.scss";
 import sound from "~/assets/audio/folding-chair-metal-slide_mjiknwvu.mp3";
 let audio = new Audio(`${sound}`);
-audio.volume = 0;
+audio.volume = 0.5;
 let areaSize = 4;
 let godMode = false;
+let isLoad = false;
+let totalTime = 0;
+let timer;
 
 function startGame() {
   myGameArea.start();
-  addComponent(`${areaSize * areaSize - 1}`);
+  if (isLoad && localStorage.getItem("save")) {
+    let arrLoad = localStorage.getItem("save").split(",");
+    addComponent(`${arrLoad.length}`, arrLoad);
+  } else {
+    addComponent(`${areaSize * areaSize}`);
+  }
 }
 const myHTML = {
   header: document.createElement("header"),
   container: document.createElement("div"),
   container2: document.createElement("div"),
+  navResult: document.createElement("div"),
   buttonStart: document.createElement("button"),
   buttonStop: document.createElement("button"),
   buttonSave: document.createElement("button"),
+  buttonLoad: document.createElement("button"),
   buttonResults: document.createElement("button"),
   buttonGodMode: document.createElement("button"),
   buttonRow: document.createElement("div"),
@@ -38,6 +48,7 @@ const myHTML = {
     this.buttonRow.classList.add("button-row");
     this.buttonRowSize.classList.add("button-row-size");
     this.analyticRow.classList.add("analytic-row");
+    this.navResult.classList.add("navResult");
     this.moves.classList.add("moves");
     this.time.classList.add("time");
     this.sound.classList.add("sound");
@@ -46,7 +57,9 @@ const myHTML = {
     this.buttonStop.id = "stop";
     this.buttonStop.textContent = "stop timer";
     this.buttonSave.id = "save";
+    this.buttonLoad.id = "load";
     this.buttonSave.textContent = "Save";
+    this.buttonLoad.textContent = "Load";
     this.buttonResults.id = "results";
     this.buttonResults.textContent = "Results";
     this.buttonGodMode.textContent = "GodMode";
@@ -63,9 +76,11 @@ const myHTML = {
     this.buttonRow.append(this.buttonStart);
     this.buttonRow.append(this.buttonStop);
     this.buttonRow.append(this.buttonSave);
+    this.buttonRow.append(this.buttonLoad);
     this.buttonRow.append(this.buttonResults);
     this.buttonRow.append(this.buttonGodMode);
     this.buttonRow.append(this.sound);
+
     this.size3.textContent = "3x3";
     this.size4.textContent = "4x4";
     this.size5.textContent = "5x5";
@@ -105,11 +120,11 @@ function getRandomIntInclusive(min, max) {
 function getRandomArrNumber(countElement) {
   let arrNumber = [];
   let randomArrNumber = [];
-  for (let i = 1; i <= countElement; i++) {
+  for (let i = 0; i < countElement; i++) {
     arrNumber.push(i);
   }
 
-  while (randomArrNumber.length - 1 <= countElement) {
+  while (randomArrNumber.length < countElement) {
     randomArrNumber.push(
       arrNumber.splice(`${getRandomIntInclusive(0, arrNumber.length - 1)}`, 1)
     );
@@ -122,32 +137,41 @@ function getRandomArrNumber(countElement) {
   }
 }
 
-function addComponent(countElement) {
+function addComponent(countElement, loadArr) {
   const canvas = document.querySelector(".canvas");
-  let newElementEmptiness = document.createElement("div");
+  let randomArrNumber;
 
-  let randomArrNumber = getRandomArrNumber(`${areaSize * areaSize - 1}`);
+  if (loadArr) {
+    randomArrNumber = loadArr;
+  } else {
+    randomArrNumber = getRandomArrNumber(`${areaSize * areaSize}`);
+  }
 
   for (let i = 0; i < countElement; i++) {
     let randomNumber = randomArrNumber.splice(0, 1);
     let newElement = document.createElement("div");
-    newElement.classList.add("component", `size${areaSize}`);
+    if (randomNumber == 0) {
+      newElement.classList.add("component", "emptiness", `size${areaSize}`);
+      newElement.setAttribute("name", `${randomNumber}`);
+    } else {
+      newElement.classList.add("component", `size${areaSize}`);
+      newElement.setAttribute("name", `${randomNumber}`);
+      newElement.textContent = randomNumber;
+    }
+
     newElement.setAttribute("draggable", "true");
-    newElement.setAttribute("name", `${randomNumber}`);
-    newElement.textContent = randomNumber;
     canvas.append(newElement);
   }
-
-  newElementEmptiness.classList.add(
-    "component",
-    "emptiness",
-    `size${areaSize}`
-  );
-  newElementEmptiness.setAttribute("draggable", "false");
-  newElementEmptiness.setAttribute("name", `${areaSize * areaSize}`);
-  canvas.append(newElementEmptiness);
 }
 startGame();
+
+function getIndexChildHTMLCollections(HTMLCollections, valueSearchElement) {
+  for (let i = 0; i < HTMLCollections.length; i++) {
+    if (valueSearchElement == HTMLCollections[i].getAttribute("name")) {
+      return i;
+    }
+  }
+}
 document.querySelector(".canvas").addEventListener("click", (el) => {
   const emptiness = document.querySelector(".emptiness");
   let allComponent = document.querySelector(".canvas").children;
@@ -158,6 +182,7 @@ document.querySelector(".canvas").addEventListener("click", (el) => {
       }
     }
   };
+
   let isNextSiblingEmptiness = allComponent[`${numberChildrenElement() + 1}`]
     ? allComponent[`${numberChildrenElement() + 1}`].classList.contains(
         "emptiness"
@@ -231,6 +256,7 @@ document.querySelector(".canvas").addEventListener("click", (el) => {
 });
 
 function newGame() {
+  console.log(resultGame);
   const canvas = document.body.childNodes[1];
   if (canvas.classList.contains("canvas")) {
     myGameArea.movesCounter = 0;
@@ -249,9 +275,6 @@ function counters() {
 }
 
 counters();
-
-let totalTime = 0;
-let timer;
 
 function startWatch() {
   let min;
@@ -303,7 +326,6 @@ document.querySelector(".button-row-size").addEventListener("click", (el) => {
   switch (el.target.textContent) {
     case "3x3":
       areaSize = 3;
-      deliteAndAddClass(document.querySelectorAll(".canvas >div"), "tree");
       newGame();
       break;
     case "4x4":
@@ -333,11 +355,6 @@ document.querySelector(".button-row-size").addEventListener("click", (el) => {
       break;
   }
 });
-function deliteAndAddClass(colection, addClass) {
-  colection.forEach((element) => {
-    element.classList.add(addClass);
-  });
-}
 
 function isWin() {
   let allComponent = document.querySelector(".canvas").children;
@@ -346,10 +363,13 @@ function isWin() {
   for (let i = 0; i < allComponent.length; i++) {
     if (allComponent[i].getAttribute("name") === `${i + 1}`) {
       winMoves++;
-    } else {
     }
   }
+  if (allComponent[allComponent.length - 1].getAttribute("name") === "0") {
+    winMoves++;
+  }
   if (winMoves === allComponent.length) {
+    addTopResult();
     alert(
       `Hooray! You solved the puzzle in ${
         document.querySelector(".time > span").textContent
@@ -376,8 +396,10 @@ function countInversion(array) {
 }
 
 function isPossibleSolve(arr) {
+  let indexEmptiness = arr.findIndex((el) => el == "0");
+  let rowEmptiness = Math.floor(indexEmptiness / areaSize);
   if (areaSize % 2 === 0) {
-    if ((countInversion(arr) + (areaSize - 1)) % 2 === 0) {
+    if ((countInversion(arr) + rowEmptiness) % 2 === 0) {
       return false;
     } else {
       return true;
@@ -390,3 +412,53 @@ function isPossibleSolve(arr) {
     }
   }
 }
+function saveGame() {
+  let allComponent = document.querySelector(".canvas").children;
+  let saveResult = [];
+  for (let i = 0; i < allComponent.length; i++) {
+    saveResult.push(allComponent[i].textContent);
+  }
+  setLocalStorage("save", saveResult);
+  setLocalStorage("areaSize", areaSize);
+  setLocalStorage("moves", myGameArea.movesCounter);
+  setLocalStorage("totalTime", totalTime);
+  setLocalStorage("resultGame", JSON.stringify(resultGame));
+}
+function loadGame() {
+  isLoad = true;
+  areaSize = +localStorage.getItem("areaSize");
+  newGame();
+  totalTime = +localStorage.getItem("totalTime");
+  myGameArea.movesCounter = +localStorage.getItem("moves");
+  isLoad = false;
+}
+
+document.querySelector("#save").addEventListener("click", saveGame);
+document.querySelector("#load").addEventListener("click", loadGame);
+
+function setLocalStorage(name, value) {
+  localStorage.setItem(`${name}`, value);
+}
+
+let resultGame = {
+  3: [],
+  4: [],
+  5: [],
+  6: [],
+  7: [],
+  8: [],
+};
+function addTopResult() {
+  resultGame[`${areaSize}`].push(
+    `You solved the puzzle in ${
+      document.querySelector(".time > span").textContent
+    } and ${myGameArea.movesCounter} moves`
+  );
+}
+
+function getLocalStorage() {
+  if (localStorage.getItem("resultGame")) {
+    resultGame = JSON.parse(localStorage.getItem("resultGame"));
+  }
+}
+window.addEventListener("load", getLocalStorage);
