@@ -1,9 +1,10 @@
 import "../../stylesheets/main.scss";
 import sound from "~/assets/audio/folding-chair-metal-slide_mjiknwvu.mp3";
-let audio = new Audio(`${sound}`);
+import { noName } from "~/jssheets/noName";
+export let audio = new Audio(`${sound}`);
 audio.volume = 0.5;
-let areaSize = 4;
-let godMode = false;
+export let areaSize = 4;
+export let godMode = false;
 let isLoad = false;
 let totalTime = 0;
 let timer;
@@ -102,7 +103,7 @@ const myHTML = {
 };
 myHTML.add();
 
-const myGameArea = {
+export const myGameArea = {
   canvas: document.createElement("div"),
   movesCounter: 0,
   start: function () {
@@ -163,95 +164,7 @@ function addComponent(countElement, loadArr) {
 }
 startGame();
 
-function getIndexChildHTMLCollections(HTMLCollections, valueSearchElement) {
-  for (let i = 0; i < HTMLCollections.length; i++) {
-    if (valueSearchElement == HTMLCollections[i].getAttribute("name")) {
-      return i;
-    }
-  }
-}
-document.querySelector(".canvas").addEventListener("click", (el) => {
-  const emptiness = document.querySelector(".emptiness");
-  let allComponent = document.querySelector(".canvas").children;
-  let numberChildrenElement = (element) => {
-    for (let i = 0; i < allComponent.length; i++) {
-      if (el.target.textContent === allComponent[i].textContent) {
-        return i;
-      }
-    }
-  };
-
-  let isNextSiblingEmptiness = allComponent[`${numberChildrenElement() + 1}`]
-    ? allComponent[`${numberChildrenElement() + 1}`].classList.contains(
-        "emptiness"
-      )
-    : null;
-  let isPrevSiblingEmptiness = allComponent[`${numberChildrenElement() - 1}`]
-    ? allComponent[`${numberChildrenElement() - 1}`].classList.contains(
-        "emptiness"
-      )
-    : null;
-  let isRowSiblingRightEmptiness = allComponent[
-    `${numberChildrenElement() + areaSize}`
-  ]
-    ? allComponent[`${numberChildrenElement() + areaSize}`].classList.contains(
-        "emptiness"
-      )
-    : null;
-  let isRowSiblingLeftEmptiness = allComponent[
-    `${numberChildrenElement() - areaSize}`
-  ]
-    ? allComponent[`${numberChildrenElement() - areaSize}`].classList.contains(
-        "emptiness"
-      )
-    : null;
-
-  if (
-    el.target.classList.contains("component") &&
-    !el.target.classList.contains("emptiness")
-  ) {
-    if (godMode) {
-      emptiness.replaceWith(el.target.cloneNode(true));
-      el.target.replaceWith(emptiness);
-      myGameArea.movesCounter++;
-      audio.play();
-    } else if (isNextSiblingEmptiness) {
-      el.target.classList.add("moving-animation-right");
-      emptiness.replaceWith(el.target.cloneNode(true));
-      el.target.replaceWith(emptiness);
-      myGameArea.movesCounter++;
-      audio.play();
-    } else if (isPrevSiblingEmptiness) {
-      el.target.classList.add("moving-animation-left");
-      emptiness.replaceWith(el.target.cloneNode(true));
-      el.target.replaceWith(emptiness);
-      myGameArea.movesCounter++;
-      audio.play();
-    } else if (isRowSiblingRightEmptiness) {
-      el.target.classList.add("moving-animation-bottom");
-      emptiness.replaceWith(el.target.cloneNode(true));
-      el.target.replaceWith(emptiness);
-      myGameArea.movesCounter++;
-      audio.play();
-    } else if (isRowSiblingLeftEmptiness) {
-      el.target.classList.add("moving-animation-top");
-      emptiness.replaceWith(el.target.cloneNode(true));
-      el.target.replaceWith(emptiness);
-      myGameArea.movesCounter++;
-      audio.play();
-    }
-  }
-  setTimeout(() => {
-    for (const item of allComponent) {
-      item.classList.remove(
-        "moving-animation-right",
-        "moving-animation-left",
-        "moving-animation-top",
-        "moving-animation-bottom"
-      );
-    }
-  }, 400);
-});
+document.querySelector(".canvas").addEventListener("click", noName);
 
 function newGame() {
   const canvas = document.body.childNodes[1];
@@ -365,7 +278,6 @@ function isWin() {
   if (allComponent[allComponent.length - 1].getAttribute("name") == 0) {
     winMoves++;
   }
-  console.log(winMoves);
   if (winMoves === allComponent.length) {
     addTopResult();
     alert(
@@ -475,3 +387,106 @@ function getLocalStorage() {
   }
 }
 window.addEventListener("load", getLocalStorage);
+
+//////////    перетаскивание
+document.querySelector(".canvas").ondragover = allowDrop;
+
+function allowDrop(event) {
+  event.preventDefault();
+}
+
+document.querySelector(".canvas").addEventListener("dragstart", drag);
+
+function drag(event) {
+  document.querySelector(".emptiness").style.zIndex = "10";
+  event.dataTransfer.setData("name", event.target.attributes.name.nodeValue);
+}
+
+document.querySelector(".canvas").addEventListener("drop", drop);
+function drop(event) {
+  if (event.target.classList.contains("emptiness")) {
+    let itemNameValue = document.getElementsByName(
+      event.dataTransfer.getData("name")
+    )[0];
+
+    const emptiness = document.querySelector(".emptiness");
+    let allComponent = document.querySelector(".canvas").children;
+    let numberChildrenElement = () => {
+      for (let i = 0; i < allComponent.length; i++) {
+        if (itemNameValue.textContent === allComponent[i].textContent) {
+          return i;
+        }
+      }
+    };
+
+    let isNextSiblingEmptiness = allComponent[`${numberChildrenElement() + 1}`]
+      ? allComponent[`${numberChildrenElement() + 1}`].classList.contains(
+          "emptiness"
+        )
+      : null;
+    let isPrevSiblingEmptiness = allComponent[`${numberChildrenElement() - 1}`]
+      ? allComponent[`${numberChildrenElement() - 1}`].classList.contains(
+          "emptiness"
+        )
+      : null;
+    let isRowSiblingRightEmptiness = allComponent[
+      `${numberChildrenElement() + areaSize}`
+    ]
+      ? allComponent[
+          `${numberChildrenElement() + areaSize}`
+        ].classList.contains("emptiness")
+      : null;
+    let isRowSiblingLeftEmptiness = allComponent[
+      `${numberChildrenElement() - areaSize}`
+    ]
+      ? allComponent[
+          `${numberChildrenElement() - areaSize}`
+        ].classList.contains("emptiness")
+      : null;
+
+    if (true) {
+      if (godMode) {
+        emptiness.replaceWith(itemNameValue.cloneNode(true));
+        itemNameValue.replaceWith(emptiness);
+        myGameArea.movesCounter++;
+        audio.play();
+      } else if (isNextSiblingEmptiness) {
+        itemNameValue.classList.add("moving-animation-right");
+        emptiness.replaceWith(itemNameValue.cloneNode(true));
+        itemNameValue.replaceWith(emptiness);
+        myGameArea.movesCounter++;
+        audio.play();
+      } else if (isPrevSiblingEmptiness) {
+        itemNameValue.classList.add("moving-animation-left");
+        emptiness.replaceWith(itemNameValue.cloneNode(true));
+        itemNameValue.replaceWith(emptiness);
+        myGameArea.movesCounter++;
+        audio.play();
+      } else if (isRowSiblingRightEmptiness) {
+        itemNameValue.classList.add("moving-animation-bottom");
+        emptiness.replaceWith(itemNameValue.cloneNode(true));
+        itemNameValue.replaceWith(emptiness);
+        myGameArea.movesCounter++;
+        audio.play();
+      } else if (isRowSiblingLeftEmptiness) {
+        itemNameValue.classList.add("moving-animation-top");
+        emptiness.replaceWith(itemNameValue.cloneNode(true));
+        itemNameValue.replaceWith(emptiness);
+        myGameArea.movesCounter++;
+        audio.play();
+      }
+    }
+
+    document.querySelector(".emptiness").style.zIndex = "-1";
+    setTimeout(() => {
+      for (const item of allComponent) {
+        item.classList.remove(
+          "moving-animation-right",
+          "moving-animation-left",
+          "moving-animation-top",
+          "moving-animation-bottom"
+        );
+      }
+    }, 400);
+  }
+}
