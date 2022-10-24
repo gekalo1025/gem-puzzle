@@ -1,27 +1,53 @@
+body {
+    background-color: black;
+}
+.header {
+    margin-bottom: 9%;
+    padding: 0;
+    @media (max-width: 900px) {
+        margin-bottom: 12%;
+    }
+    @media (max-width: 720px) {
+        margin-bottom: 120px;
+    }
+}
+.header_title {
+    font-size: 40px;
+    text-align: center;
+    color: #fff;
+}
 .canvas {
     position: relative;
-    border: 5px solid rgb(0, 0, 0);
-    // @include adaptiv-value("max-width", 1000, 300);
     max-width: 50%;
     height: 65vh;
-    margin: 30px auto;
+    margin: 0px auto 30px auto;
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 20px;
-    background-color: black;
+    background-color: red;
+    box-shadow: 0px 0px 60px 5px rgba(255, 0, 0, 0.2);
+    @media (max-width: 1400px) {
+        height: auto;
+    }
+    @media (max-width: 1000px) {
+        max-width: 80%;
+    }
 }
 .component {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #1dc49d;
-
+    background-color: black;
     width: calc((100% / 4));
     height: calc((100% / 4));
     min-height: 50px;
-    border: 2px solid rgb(238, 250, 10);
-    color: black;
-    font-size: 100%;
+    border-radius: 5%;
+    border: 2px solid red;
+    color: white;
+    box-shadow: 0px 0px 7px 3px rgba(0, 0, 0, 0.5);
+    @include adaptiv-value("font-size", 45, 30, 1920, 1000);
+    @include adaptiv-value("font-size", 30, 20, 1000, 320);
+    // font-size: 100%;
     z-index: 3;
     cursor: grab;
     position: relative;
@@ -33,24 +59,32 @@
 .size5 {
     width: calc(100% / 5);
     height: calc((100% / 5));
+    @include adaptiv-value("font-size", 40, 30, 1920, 1000);
+    @include adaptiv-value("font-size", 30, 20, 1000, 320);
 }
 .size6 {
     width: calc(100% / 6);
-    height: calc((100% / 6));
+    max-height: calc((100% / 6));
+    @include adaptiv-value("font-size", 40, 30, 1920, 1000);
+    @include adaptiv-value("font-size", 30, 10, 1000, 320);
 }
 .size7 {
     width: calc(100% / 7);
     height: calc((100% / 7));
+    @include adaptiv-value("font-size", 30, 20, 1920, 1000);
+    @include adaptiv-value("font-size", 20, 10, 1000, 320);
 }
 
 .size8 {
     width: calc(100% / 8);
     height: calc((100% / 8));
+    @include adaptiv-value("font-size", 30, 20, 1920, 1000);
+    @include adaptiv-value("font-size", 20, 10, 1000, 320);
 }
 .emptiness {
     position: relative;
     z-index: -1;
-    background-color: rgb(0, 0, 0);
+    background-color: rgb(255, 0, 0);
     transition: background-color 1s;
 }
 
@@ -63,25 +97,20 @@
 }
 
 #god-mode {
-    background-color: #f1f1f1;
     &.active {
-        background-color: rgb(128, 208, 81);
+        background-color: rgb(0, 0, 0);
+        color: red;
     }
 }
 #stop {
     display: none;
 }
-// .nav-result {
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     width: 100px;
-//     height: 100px;
-//     background-color: #1dc49d;
-
-//     & .visible {
-//     }
-// }
+.moves {
+    color: #fff;
+}
+.time {
+    color: #fff;
+}
 
 [data-tooltip] {
     position: relative; /* Относительное позиционирование */

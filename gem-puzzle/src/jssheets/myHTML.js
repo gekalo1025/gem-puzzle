@@ -1,6 +1,7 @@
 export const myHTML = {
   body: document.body,
   header: null,
+  header_title: null,
   container: null,
   container2: null,
   navResult: null,
@@ -25,6 +26,7 @@ export const myHTML = {
 
   addElement: function () {
     this.header.append(this.container);
+    this.container.append(this.header_title);
     this.container.append(this.buttonRow);
     this.container.append(this.analyticRow);
     this.buttonRow.append(this.buttonStart);
@@ -51,6 +53,7 @@ export const myHTML = {
   },
   createElements: function () {
     (this.header = document.createElement("header")),
+      (this.header_title = document.createElement("h1")),
       (this.container = document.createElement("div")),
       (this.container2 = document.createElement("div")),
       (this.navResult = document.createElement("div")),
@@ -74,6 +77,7 @@ export const myHTML = {
       (this.size8 = document.createElement("button"));
   },
   addClassElements: function () {
+    this.header_title.classList.add("header_title");
     this.header.classList.add("header");
     this.container.classList.add("container");
     this.container2.classList.add("container");
@@ -94,9 +98,10 @@ export const myHTML = {
     this.buttonGodMode.id = "god-mode";
   },
   addSetAttribute: function () {
-    this.buttonGodMode.setAttribute("data-tooltip", "Двигай как хочешь");
+    // this.buttonGodMode.setAttribute("data-tooltip", "Двигай как хочешь");
   },
   addTextContentElement: function () {
+    this.header_title.textContent = "Gem puzzle";
     this.buttonStop.textContent = "stop timer";
     this.buttonSave.textContent = "Save";
     this.buttonLoad.textContent = "Load";

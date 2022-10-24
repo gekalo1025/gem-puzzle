@@ -31,7 +31,7 @@ const config = {
   },
   devServer: {
     port: 8080,
-    open: true,
+    open: ["/home.html"],
     host: "localhost",
     compress: true,
     hot: isDev,
