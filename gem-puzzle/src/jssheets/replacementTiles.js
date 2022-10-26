@@ -6,6 +6,7 @@ import { myGameArea } from "./myGameArea";
 export default function replacementTiles(el) {
   const emptinessTiles = document.querySelector(".emptiness");
   const allTiles = document.querySelector(".canvas").children;
+  const canvas = document.querySelector(".canvas");
 
   const isNextSiblingEmptiness = allTiles[
     `${searchIndexElement(el, allTiles, "textContent") + 1}`
@@ -74,14 +75,5 @@ export default function replacementTiles(el) {
       audio.play();
     }
   }
-  setTimeout(() => {
-    for (const item of allTiles) {
-      item.classList.remove(
-        "moving-animation-right",
-        "moving-animation-left",
-        "moving-animation-top",
-        "moving-animation-bottom"
-      );
-    }
-  }, 400);
+  canvas.removeEventListener("click", replacementTiles);
 }

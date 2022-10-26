@@ -56,6 +56,7 @@ const buttonRowSize = document.querySelector(".button-row-size");
 const save = document.querySelector("#save");
 const load = document.querySelector("#load");
 const results = document.querySelector("#results");
+const allTiles = document.querySelector(".canvas").children;
 
 /////////////////// Functions ////////////////////
 (function showMoves() {
@@ -112,6 +113,17 @@ function getLocalStorage() {
 
 /////////////////// Event Listeners ////////////////////
 canvas.addEventListener("click", replacementTiles);
+
+canvas.addEventListener("animationend", (el) => {
+  el.target.classList.remove(
+    "moving-animation-right",
+    "moving-animation-left",
+    "moving-animation-top",
+    "moving-animation-bottom"
+  );
+
+  canvas.addEventListener("click", replacementTiles);
+});
 
 start.addEventListener("click", newGame);
 

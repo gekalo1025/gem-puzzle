@@ -66,14 +66,4 @@ export default function replacementTilesForDrop(item) {
   }
 
   document.querySelector(".emptiness").style.zIndex = "-1";
-  setTimeout(() => {
-    for (const item of allTiles) {
-      item.classList.remove(
-        "moving-animation-right",
-        "moving-animation-left",
-        "moving-animation-top",
-        "moving-animation-bottom"
-      );
-    }
-  }, 400);
 }
