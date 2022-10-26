@@ -55,25 +55,28 @@ export default function replacementTiles(el) {
       el.target.replaceWith(emptinessTiles);
       myGameArea.movesCounter++;
       audio.play();
+      canvas.removeEventListener("click", replacementTiles);
     } else if (isPrevSiblingEmptiness) {
       el.target.classList.add("moving-animation-left");
       emptinessTiles.replaceWith(el.target.cloneNode(true));
       el.target.replaceWith(emptinessTiles);
       myGameArea.movesCounter++;
       audio.play();
+      canvas.removeEventListener("click", replacementTiles);
     } else if (isRowSiblingRightEmptiness) {
       el.target.classList.add("moving-animation-bottom");
       emptinessTiles.replaceWith(el.target.cloneNode(true));
       el.target.replaceWith(emptinessTiles);
       myGameArea.movesCounter++;
       audio.play();
+      canvas.removeEventListener("click", replacementTiles);
     } else if (isRowSiblingLeftEmptiness) {
       el.target.classList.add("moving-animation-top");
       emptinessTiles.replaceWith(el.target.cloneNode(true));
       el.target.replaceWith(emptinessTiles);
       myGameArea.movesCounter++;
       audio.play();
+      canvas.removeEventListener("click", replacementTiles);
     }
   }
-  canvas.removeEventListener("click", replacementTiles);
 }
