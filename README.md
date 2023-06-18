@@ -1,1 +1,0 @@
-# gekalo1025-JSFE2022Q3
